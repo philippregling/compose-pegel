@@ -10,9 +10,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import timber.log.Timber
 import okhttp3.OkHttpClient
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZonedDateTime
-
 
 interface Client {
 

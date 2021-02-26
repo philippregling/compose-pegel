@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ComposePegel</string>
+    <string name="uuid">UUID</string>
+    <string name="shortname">Short name</string>
+    <string name="longname">Long name</string>
+    <string name="km">KM</string>
+    <string name="km_x">%1$s km</string>
+    <string name="agency">Agency</string>
+    <string name="water">Water</string>
+    <string name="station">Station</string>
+    <string name="share">Share</string>
+    <string name="back">Back</string>
 </resources>

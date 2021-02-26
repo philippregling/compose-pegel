@@ -24,7 +24,7 @@ class HTTPRepositoryImpl(client: Client) : HTTPRepository {
     override suspend fun getWaters(): Result<List<WaterModel>> {
         return withContext(Dispatchers.Default) {
             // TODO Also build server model conversion
-            delay(1500)
+            delay(500)
             try {
                 val response = api.getWaters()
                 Result.Success(data = response.body()!!.filterNotNull())
@@ -37,7 +37,7 @@ class HTTPRepositoryImpl(client: Client) : HTTPRepository {
     override suspend fun getStationsForWaters(waterShortname: String): Result<List<StationModel>> {
         return withContext(Dispatchers.Default) {
             // TODO Also build server model conversion
-            delay(1500)
+            delay(500)
             try {
                 val response = api.getStationsForWater(waterShortname)
                 Result.Success(data = response.body()!!.filterNotNull())
@@ -50,7 +50,7 @@ class HTTPRepositoryImpl(client: Client) : HTTPRepository {
     override suspend fun getDetailForStation(stationUuid: String): Result<StationModel> {
         return withContext(Dispatchers.Default) {
             // TODO Also build server model conversion
-            delay(1500)
+            delay(500)
             try {
                 val response = api.getDetailsForStation(stationUuid)
                 Result.Success(data = response.body()!!)

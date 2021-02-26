@@ -31,7 +31,7 @@ fun Water(
     Box(modifier = Modifier.fillMaxSize()) {
         WaterContent(
             state = viewState,
-            onStationsClicked = { navController.navigate("station/${it.uuid}") }
+            onStationsClicked = { navController.navigate("station/${it.uuid}?shortName=${it.shortname}") }
         )
     }
 }

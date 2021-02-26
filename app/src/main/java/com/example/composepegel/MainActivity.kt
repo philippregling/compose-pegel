@@ -3,37 +3,116 @@ package com.example.composepegel
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.darkColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.lightColors
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.composepegel.model.WaterModel
 import com.example.composepegel.ui.station.Station
 import com.example.composepegel.ui.water.Water
 import com.example.composepegel.ui.waters.Waters
+import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
             MaterialTheme(colors = if (isSystemInDarkTheme()) darkColors() else lightColors()) {
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "waters") {
-                    composable("waters") { Waters(navController) }
-                    composable("water/{shortName}") {
-                        Water(navController, it.arguments?.getString("shortName") ?: "")
-                    }
-                    composable("station/{uuid}") {
-                        Station(navController, it.arguments?.getString("uuid") ?: "")
-                    }
+                val titleState = mutableStateOf("")
+                val menuState = mutableStateOf(MenuState())
+                ProvideWindowInsets {
+                    Scaffold(
+                        topBar = {
+                            TopAppBar(
+                                elevation = 8.dp,
+                                title = { Text(text = titleState.value) },
+                                navigationIcon = if (menuState.value.showBack) {
+                                    {
+                                        IconButton(onClick = {
+                                            navController.navigateUp()
+                                        }
+                                        ) {
+                                            Icon(
+                                                Icons.Filled.ArrowBack,
+                                                contentDescription = stringResource(id = R.string.back)
+                                            )
+                                        }
+                                    }
+                                } else null,
+                                modifier = Modifier.fillMaxWidth(),
+                                actions = if (menuState.value.showShare) {
+                                    {
+                                        IconButton(onClick = {
+                                            menuState.value.onShareClicked?.onSharedClicked()
+                                        }) {
+                                            Icon(
+                                                Icons.Filled.Share,
+                                                contentDescription = stringResource(id = R.string.share)
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    {}
+                                }
+                            )
+                        },
+                        content = {
+                            NavHost(navController = navController, startDestination = "waters") {
+                                composable("waters") {
+                                    titleState.value = "Waters"
+                                    menuState.value = MenuState()
+                                    Waters(navController)
+                                }
+                                composable("water/{shortName}") {
+                                    val shortName = it.arguments?.getString("shortName") ?: ""
+                                    titleState.value = shortName
+                                    menuState.value = MenuState(showBack = true)
+                                    Water(navController, shortName)
+                                }
+                                composable("station/{uuid}?shortName={shortName}") {
+                                    val shortName = it.arguments?.getString("shortName") ?: ""
+                                    titleState.value = shortName
+                                    menuState.value = MenuState(showBack = true, showShare = true)
+                                    Station(
+                                        navController,
+                                        it.arguments?.getString("uuid") ?: ""
+                                    )
+                                }
+                            }
+                        })
                 }
             }
         }
     }
+}
+
+
+data class MenuState(
+    var showBack: Boolean = false,
+    var showShare: Boolean = false,
+    var onShareClicked: ShareClickListener? = null,
+)
+
+interface ShareClickListener {
+    fun onSharedClicked()
 }
