@@ -1,8 +1,10 @@
 package com.example.composepegel.network
 
-import android.util.Log
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.model.WaterModel
+import com.example.composepegel.network.converters.convert
+import com.example.composepegel.network.converters.convertStations
+import com.example.composepegel.network.converters.convertWaters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -23,37 +25,50 @@ class HTTPRepositoryImpl(client: Client) : HTTPRepository {
 
     override suspend fun getWaters(): Result<List<WaterModel>> {
         return withContext(Dispatchers.Default) {
-            // TODO Also build server model conversion
             delay(500)
             try {
                 val response = api.getWaters()
-                Result.Success(data = response.body()!!.filterNotNull())
+                if (response.isSuccess()) {
+                    Result.Success(data = response.body()!!.filterNotNull().convertWaters())
+                } else {
+                    Result.Error(error = response.getError())
+                }
             } catch (e: Exception) {
                 e.toResult()
             }
         }
     }
 
+    @ExperimentalSerializationApi
     override suspend fun getStationsForWaters(waterShortname: String): Result<List<StationModel>> {
         return withContext(Dispatchers.Default) {
-            // TODO Also build server model conversion
             delay(500)
             try {
                 val response = api.getStationsForWater(waterShortname)
-                Result.Success(data = response.body()!!.filterNotNull())
+                if (response.isSuccess()) {
+                    Result.Success(data = response.body()!!.filterNotNull().convertStations())
+                } else {
+                    Result.Error(response.getError())
+                }
             } catch (e: Exception) {
                 e.toResult()
             }
         }
     }
 
+    @ExperimentalSerializationApi
     override suspend fun getDetailForStation(stationUuid: String): Result<StationModel> {
         return withContext(Dispatchers.Default) {
-            // TODO Also build server model conversion
             delay(500)
             try {
                 val response = api.getDetailsForStation(stationUuid)
-                Result.Success(data = response.body()!!)
+                if (response.isSuccess()) {
+                    val station = response.body()!!.convert()
+                    SimpleCache.lastLoadedStation = station
+                    Result.Success(data = station)
+                } else {
+                    Result.Error(response.getError())
+                }
             } catch (e: Exception) {
                 e.toResult()
             }

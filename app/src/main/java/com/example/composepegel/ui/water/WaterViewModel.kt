@@ -1,14 +1,15 @@
 package com.example.composepegel.ui.water
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.composepegel.architecture.viewModelFactory
 import com.example.composepegel.model.StationModel
-import com.example.composepegel.model.WaterModel
 import com.example.composepegel.network.ClientImpl
 import com.example.composepegel.network.HTTPRepository
 import com.example.composepegel.network.HTTPRepositoryImpl
 import com.example.composepegel.network.Result
-import com.example.composepegel.ui.waters.WatersViewModel
 import kotlinx.coroutines.launch
 
 class WaterViewModel(waterShortName: String) : ViewModel() {
@@ -22,7 +23,7 @@ class WaterViewModel(waterShortName: String) : ViewModel() {
     init {
         viewModelScope.launch {
             when (val result = httpRepository.getStationsForWaters(waterShortName)) {
-                is Result.Success -> _state.value =  WaterState.Stations(result.data)
+                is Result.Success -> _state.value = WaterState.Stations(result.data)
                 is Result.Error -> _state.value = WaterState.Error(result.error)
             }
         }

@@ -1,7 +1,12 @@
 package com.example.composepegel.ui.waters
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
@@ -30,7 +35,7 @@ fun Waters(navController: NavController, viewModel: WatersViewModel = viewModel(
     }
 }
 
-@Composable()
+@Composable
 fun WatersContent(state: WatersState, onWaterClicked: (water: WaterModel) -> Unit) {
     when (state) {
         WatersState.InProgress -> DefaultProgress()
@@ -53,13 +58,12 @@ fun WatersList(waters: List<WaterModel>, onWaterClicked: (water: WaterModel) -> 
                     onWaterClicked(water)
                 }) {
                 Box(modifier = Modifier.padding(16.dp)) {
-                    Text(text = water.shortname ?: "")
+                    Text(text = water.shortname)
                 }
             }
         }
     }
 }
-
 
 
 @Preview

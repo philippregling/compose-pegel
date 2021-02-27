@@ -1,7 +1,5 @@
 package com.example.composepegel.ui.station
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,9 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.bumptech.glide.request.RequestOptions
 import com.example.composepegel.R
-import com.example.composepegel.ShareClickListener
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.ui.common.DefaultError
 import com.example.composepegel.ui.common.DefaultProgress
@@ -92,8 +88,16 @@ fun StationInfo(station: StationModel) {
                 title = stringResource(id = R.string.km),
                 value = stringResource(id = R.string.km_x, station.km.toString())
             )
-            StationInfoElement(title = stringResource(id = R.string.agency), value = station.agency, isLastItem = true)
-            Text(modifier = Modifier.padding(top = 16.dp), text = stringResource(id = R.string.water), style = MaterialTheme.typography.h4)
+            StationInfoElement(
+                title = stringResource(id = R.string.agency),
+                value = station.agency,
+                isLastItem = true
+            )
+            Text(
+                modifier = Modifier.padding(top = 16.dp),
+                text = stringResource(id = R.string.water),
+                style = MaterialTheme.typography.h4
+            )
             StationInfoElement(
                 title = stringResource(id = R.string.shortname),
                 value = station.water?.shortname ?: ""

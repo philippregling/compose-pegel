@@ -1,10 +1,5 @@
 package com.example.composepegel.model
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-
-@ExperimentalSerializationApi
-@Serializable
 data class TimeSeriesModel(
     val shortname: String = "",
     val longname: String = "",

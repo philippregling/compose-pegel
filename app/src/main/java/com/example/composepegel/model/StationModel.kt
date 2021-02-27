@@ -1,10 +1,5 @@
 package com.example.composepegel.model
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-
-@ExperimentalSerializationApi
-@Serializable
 data class StationModel(
     val uuid: String = "",
     val number: String = "",

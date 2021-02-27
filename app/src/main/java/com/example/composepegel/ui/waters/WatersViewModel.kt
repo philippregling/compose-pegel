@@ -1,6 +1,5 @@
 package com.example.composepegel.ui.waters
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,7 @@ import com.example.composepegel.network.HTTPRepositoryImpl
 import com.example.composepegel.network.Result
 import kotlinx.coroutines.launch
 
-class WatersViewModel() : ViewModel() {
+class WatersViewModel : ViewModel() {
 
     // TODO Dependency Injection does not work yet, try koin ina  few days
     private val httpRepository: HTTPRepository = HTTPRepositoryImpl(ClientImpl())
