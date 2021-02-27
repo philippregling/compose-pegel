@@ -7,11 +7,11 @@ sealed class Result<T> {
     data class Error<T>(val error: String?) : Result<T>()
 }
 
-fun <T> Response<T>.isSuccess() : Boolean {
+fun <T> Response<T>.isSuccess(): Boolean {
     return isSuccessful && body() != null
 }
 
-fun <T> Response<T>.getError() : String {
+fun <T> Response<T>.getError(): String {
     return errorBody()?.string() ?: ""
 }
 

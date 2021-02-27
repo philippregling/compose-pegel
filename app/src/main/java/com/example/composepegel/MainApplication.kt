@@ -1,7 +1,6 @@
 package com.example.composepegel
 
 import android.app.Application
-import com.example.composepegel.model.StationModel
 import com.example.composepegel.network.Client
 import com.example.composepegel.network.ClientImpl
 import com.example.composepegel.network.HTTPRepository
@@ -12,7 +11,6 @@ import com.example.composepegel.ui.waters.WatersViewModel
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.androidx.experimental.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module

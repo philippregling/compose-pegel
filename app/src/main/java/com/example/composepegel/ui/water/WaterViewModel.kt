@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.composepegel.architecture.viewModelFactory
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.network.HTTPRepository
 import com.example.composepegel.network.Result

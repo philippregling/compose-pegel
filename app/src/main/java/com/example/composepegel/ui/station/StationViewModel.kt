@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.composepegel.architecture.viewModelFactory
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.network.HTTPRepository
 import com.example.composepegel.network.Result
@@ -12,7 +11,8 @@ import kotlinx.coroutines.launch
 
 class StationViewModel(
     private val httpRepository: HTTPRepository,
-    stationUuid: String) : ViewModel() {
+    stationUuid: String
+) : ViewModel() {
 
     private val _state = MutableLiveData<StationState>(StationState.InProgress)
     val state: LiveData<StationState> = _state

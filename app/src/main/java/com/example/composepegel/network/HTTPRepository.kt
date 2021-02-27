@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import retrofit2.create
 
 interface HTTPRepository {
     suspend fun getWaters(): Result<List<WaterModel>>
