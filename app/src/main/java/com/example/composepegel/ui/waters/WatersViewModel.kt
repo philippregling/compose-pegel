@@ -5,16 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composepegel.model.WaterModel
-import com.example.composepegel.network.ClientImpl
 import com.example.composepegel.network.HTTPRepository
-import com.example.composepegel.network.HTTPRepositoryImpl
 import com.example.composepegel.network.Result
 import kotlinx.coroutines.launch
 
-class WatersViewModel : ViewModel() {
-
-    // TODO Dependency Injection does not work yet, try koin ina  few days
-    private val httpRepository: HTTPRepository = HTTPRepositoryImpl(ClientImpl())
+class WatersViewModel(
+    private val httpRepository: HTTPRepository
+) : ViewModel() {
 
     private val _state = MutableLiveData<WatersState>(WatersState.InProgress)
     val state: LiveData<WatersState> = _state

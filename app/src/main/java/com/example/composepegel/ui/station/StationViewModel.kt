@@ -6,16 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composepegel.architecture.viewModelFactory
 import com.example.composepegel.model.StationModel
-import com.example.composepegel.network.ClientImpl
 import com.example.composepegel.network.HTTPRepository
-import com.example.composepegel.network.HTTPRepositoryImpl
 import com.example.composepegel.network.Result
 import kotlinx.coroutines.launch
 
-class StationViewModel(stationUuid: String) : ViewModel() {
-
-    // TODO Dependency Injection does not work yet, try koin ina  few days
-    private val httpRepository: HTTPRepository = HTTPRepositoryImpl(ClientImpl())
+class StationViewModel(
+    private val httpRepository: HTTPRepository,
+    stationUuid: String) : ViewModel() {
 
     private val _state = MutableLiveData<StationState>(StationState.InProgress)
     val state: LiveData<StationState> = _state
@@ -34,8 +31,4 @@ sealed class StationState {
     object InProgress : StationState()
     data class Error(val error: String?) : StationState()
     data class Station(val station: StationModel) : StationState()
-}
-
-fun stationViewModelFactory(stationUuid: String) = viewModelFactory {
-    StationViewModel(stationUuid)
 }

@@ -20,12 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
+import com.example.composepegel.architecture.getViewModel
 import com.example.composepegel.model.WaterModel
 import com.example.composepegel.ui.common.DefaultError
 import com.example.composepegel.ui.common.DefaultProgress
 
 @Composable
-fun Waters(navController: NavController, viewModel: WatersViewModel = viewModel()) {
+fun Waters(navController: NavController, viewModel: WatersViewModel = getViewModel()) {
     val viewState by viewModel.state.observeAsState(WatersState.InProgress)
     Box(modifier = Modifier.fillMaxSize()) {
         WatersContent(

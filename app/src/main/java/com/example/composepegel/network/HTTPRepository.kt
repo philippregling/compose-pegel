@@ -21,7 +21,7 @@ interface HTTPRepository {
 
 class HTTPRepositoryImpl(client: Client) : HTTPRepository {
 
-    private val api = client.get().create<PegelAPI>()
+    private val api = client.get()
 
     override suspend fun getWaters(): Result<List<WaterModel>> {
         return withContext(Dispatchers.Default) {

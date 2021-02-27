@@ -29,6 +29,8 @@ import com.example.composepegel.ui.water.Water
 import com.example.composepegel.ui.waters.Waters
 import com.example.composepegel.util.shareStationDetails
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
+import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

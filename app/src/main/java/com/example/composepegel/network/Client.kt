@@ -7,17 +7,18 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.create
 import timber.log.Timber
 
 interface Client {
 
-    fun get(): Retrofit
+    fun get(): PegelAPI
 }
 
 class ClientImpl : Client {
 
     @ExperimentalSerializationApi
-    override fun get(): Retrofit {
+    override fun get(): PegelAPI {
         val logging = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }
         logging.level = HttpLoggingInterceptor.Level.BODY
         val contentType = "application/json".toMediaType()
@@ -34,6 +35,6 @@ class ClientImpl : Client {
             }.asConverterFactory(contentType))
             .client(client)
             .baseUrl("https://www.pegelonline.wsv.de/webservices/rest-api/v2/")
-            .build()
+            .build().create()
     }
 }

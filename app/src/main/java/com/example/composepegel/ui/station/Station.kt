@@ -28,22 +28,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.composepegel.R
+import com.example.composepegel.architecture.getViewModel
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.ui.common.DefaultError
 import com.example.composepegel.ui.common.DefaultProgress
 import com.example.composepegel.util.generateMeasurementsUrl
 import dev.chrisbanes.accompanist.glide.GlideImage
+import org.koin.core.parameter.parametersOf
+
 
 @Composable
 fun Station(
     navController: NavController,
     stationUuid: String,
-    viewModel: StationViewModel = viewModel()
+    viewModel: StationViewModel = getViewModel { parametersOf(stationUuid) }
 ) {
-
     val viewState by viewModel.state.observeAsState(StationState.InProgress)
     Box(modifier = Modifier.fillMaxSize()) {
         StationContent(state = viewState)
