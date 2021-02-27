@@ -3,6 +3,7 @@ package com.example.composepegel
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Icon
@@ -31,6 +32,7 @@ import com.example.composepegel.util.shareStationDetails
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : AppCompatActivity() {
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

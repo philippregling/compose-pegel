@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ComposePegel</string>
     <string name="uuid">UUID</string>
+    <string name="uuid_node">UUID (Node)</string>
     <string name="shortname">Short name</string>
     <string name="longname">Long name</string>
     <string name="km">KM</string>

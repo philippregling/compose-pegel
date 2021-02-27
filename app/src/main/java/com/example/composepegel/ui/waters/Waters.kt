@@ -1,5 +1,6 @@
 package com.example.composepegel.ui.waters
 
+import android.view.animation.AnimationUtils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,10 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
+import com.example.composepegel.R
 import com.example.composepegel.architecture.getViewModel
 import com.example.composepegel.model.WaterModel
 import com.example.composepegel.ui.common.DefaultError
@@ -30,7 +33,14 @@ fun Waters(navController: NavController, viewModel: WatersViewModel = getViewMod
     Box(modifier = Modifier.fillMaxSize()) {
         WatersContent(
             state = viewState,
-            onWaterClicked = { navController.navigate("water/${it.shortname}") }
+            onWaterClicked = { navController.navigate("water/${it.shortname}") {
+                anim {
+                    enter = R.anim.anim_slide_in_right
+                    exit = R.anim.anim_slide_out_left
+                    popEnter = R.anim.anim_slide_in_left
+                    popExit = R.anim.anim_slide_out_right
+                }
+            } }
         )
     }
 }

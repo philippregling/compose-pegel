@@ -1,19 +1,30 @@
 package com.example.composepegel.ui.station
 
+import android.util.Base64
+import android.util.Base64.NO_WRAP
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -24,11 +35,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.bumptech.glide.request.RequestOptions
 import com.example.composepegel.R
 import com.example.composepegel.architecture.getViewModel
 import com.example.composepegel.model.StationModel
@@ -36,9 +50,12 @@ import com.example.composepegel.ui.common.DefaultError
 import com.example.composepegel.ui.common.DefaultProgress
 import com.example.composepegel.util.generateMeasurementsUrl
 import dev.chrisbanes.accompanist.glide.GlideImage
+import jp.wasabeef.glide.transformations.gpu.InvertFilterTransformation
 import org.koin.core.parameter.parametersOf
+import java.util.*
 
 
+@ExperimentalAnimationApi
 @Composable
 fun Station(
     navController: NavController,
@@ -51,6 +68,7 @@ fun Station(
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun StationContent(state: StationState) {
     when (state) {
@@ -60,14 +78,29 @@ fun StationContent(state: StationState) {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun StationDetails(station: StationModel) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        val darkTheme = isSystemInDarkTheme()
         GlideImage(
             data = generateMeasurementsUrl(station.uuid, "W"),
+            loading = {
+                Box(Modifier.matchParentSize()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
+            },
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
+            requestBuilder = {
+                if (darkTheme) {
+                    val options = RequestOptions().transform(InvertFilterTransformation())
+                    apply(options)
+                } else {
+                    val options = RequestOptions()
+                    apply(options)
+                }
+            },
+            modifier = Modifier.fillMaxWidth().animateContentSize()
         )
         StationInfo(station)
     }
@@ -77,6 +110,7 @@ class StationInfoCardState(expanded: Boolean) {
     var expanded: Boolean by mutableStateOf(expanded)
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun StationInfo(
     station: StationModel,
@@ -88,42 +122,47 @@ fun StationInfo(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            if (expandState.expanded) {
-                Text(
-                    text = stringResource(id = R.string.station),
-                    style = MaterialTheme.typography.h4
-                )
-                StationInfoElement(title = stringResource(id = R.string.uuid), value = station.uuid)
-                StationInfoElement(
-                    title = stringResource(id = R.string.shortname),
-                    value = station.shortname
-                )
-                StationInfoElement(
-                    title = stringResource(id = R.string.longname),
-                    value = station.longname
-                )
-                StationInfoElement(
-                    title = stringResource(id = R.string.km),
-                    value = stringResource(id = R.string.km_x, station.km.toString())
-                )
-                StationInfoElement(
-                    title = stringResource(id = R.string.agency),
-                    value = station.agency,
-                    isLastItem = true
-                )
-                Text(
-                    modifier = Modifier.padding(top = 16.dp),
-                    text = stringResource(id = R.string.water),
-                    style = MaterialTheme.typography.h4
-                )
-                StationInfoElement(
-                    title = stringResource(id = R.string.shortname),
-                    value = station.water?.shortname ?: ""
-                )
-                StationInfoElement(
-                    title = stringResource(id = R.string.longname),
-                    value = station.water?.longname ?: "", isLastItem = true
-                )
+            AnimatedVisibility(visible = expandState.expanded) {
+                Column(Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(id = R.string.station),
+                        style = MaterialTheme.typography.h4
+                    )
+                    StationInfoElement(
+                        title = stringResource(id = R.string.uuid),
+                        value = station.uuid
+                    )
+                    StationInfoElement(
+                        title = stringResource(id = R.string.shortname),
+                        value = station.shortname
+                    )
+                    StationInfoElement(
+                        title = stringResource(id = R.string.longname),
+                        value = station.longname
+                    )
+                    StationInfoElement(
+                        title = stringResource(id = R.string.km),
+                        value = stringResource(id = R.string.km_x, station.km.toString())
+                    )
+                    StationInfoElement(
+                        title = stringResource(id = R.string.agency),
+                        value = station.agency,
+                        isLastItem = true
+                    )
+                    Text(
+                        modifier = Modifier.padding(top = 16.dp),
+                        text = stringResource(id = R.string.water),
+                        style = MaterialTheme.typography.h4
+                    )
+                    StationInfoElement(
+                        title = stringResource(id = R.string.shortname),
+                        value = station.water?.shortname ?: ""
+                    )
+                    StationInfoElement(
+                        title = stringResource(id = R.string.longname),
+                        value = station.water?.longname ?: "", isLastItem = true
+                    )
+                }
             }
             IconButton(
                 onClick = { expandState.expanded = !expandState.expanded },
@@ -141,17 +180,28 @@ fun StationInfo(
 }
 
 @Composable
-fun StationInfoElement(title: String, value: String, isLastItem: Boolean = false) {
+fun StationInfoElement(
+    title: String,
+    value: String,
+    isLastItem: Boolean = false
+) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = title, style = MaterialTheme.typography.h6)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(end = 128.dp)
+        )
         Text(text = value)
     }
     if (!isLastItem) Divider()
 }
 
+@ExperimentalAnimationApi
 @Preview
 @Composable
 fun StationDetailsPreview() {
