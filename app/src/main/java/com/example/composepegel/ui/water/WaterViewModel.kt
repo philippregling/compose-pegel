@@ -4,13 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.composepegel.database.DatabaseClient
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.network.HTTPRepository
 import com.example.composepegel.network.Result
+import com.example.composepegel.util.NetworkStateClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class WaterViewModel(
     private val httpRepository: HTTPRepository,
+    private val databaseClient: DatabaseClient,
+    private val networkStateClient: NetworkStateClient,
     waterShortName: String
 ) : ViewModel() {
 
@@ -20,8 +25,23 @@ class WaterViewModel(
     init {
         viewModelScope.launch {
             when (val result = httpRepository.getStationsForWaters(waterShortName)) {
-                is Result.Success -> _state.value = WaterState.Stations(result.data)
-                is Result.Error -> _state.value = WaterState.Error(result.error)
+                is Result.Success -> {
+                    launch(Dispatchers.Default) {
+                        databaseClient.addStationsToWater(
+                            waterShortName,
+                            result.data
+                        )
+                    }
+                    _state.value = WaterState.Stations(result.data)
+                }
+                is Result.Error -> {
+                    if (networkStateClient.isOffline) {
+                        val cachedData = databaseClient.queryStationsForWater(waterShortName)
+                        _state.value = WaterState.Stations(cachedData)
+                    } else {
+                        _state.value = WaterState.Error(result.error)
+                    }
+                }
             }
         }
     }
