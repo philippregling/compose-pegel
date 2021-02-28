@@ -27,7 +27,7 @@ class DatabaseClientImpl : DatabaseClient {
 
     override suspend fun queryWaters(): List<WaterModel> {
         Realm.getDefaultInstance()?.use {
-            val results = it.where<WaterModelDB>().findAll()
+            val results = it.where<WaterModelDB>().sort("shortname").findAll()
             return results.convertWatersFromDB()
         }
         return emptyList()
@@ -43,7 +43,7 @@ class DatabaseClientImpl : DatabaseClient {
 
     override suspend fun queryWaterForShortName(shortName: String): WaterModel {
         Realm.getDefaultInstance()?.use {
-            val result = it.where<WaterModelDB>().equalTo("shortname", shortName).findFirst()
+            val result = it.where<WaterModelDB>().equalTo("longname", shortName).findFirst()
             return result?.convert() ?: WaterModel()
         }
         return WaterModel()
@@ -52,7 +52,7 @@ class DatabaseClientImpl : DatabaseClient {
     override suspend fun queryStationsForWater(waterShortName: String): List<StationModel> {
         Realm.getDefaultInstance()?.use {
             val list =
-                it.where<StationModelDB>().equalTo("water.shortname", waterShortName).findAll()
+                it.where<StationModelDB>().equalTo("water.shortname", waterShortName).sort("longname").findAll()
             return list.convertStationsFromDB()
         }
         return emptyList()
