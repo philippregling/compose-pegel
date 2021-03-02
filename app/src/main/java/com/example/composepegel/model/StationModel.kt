@@ -8,5 +8,7 @@ data class StationModel(
     val km: Double = 0.0,
     val agency: String = "",
     val water: WaterModel? = null,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
     val timeseries: List<TimeSeriesModel> = listOf()
 )

@@ -15,4 +15,6 @@
     <string name="expand">Expand</string>
     <string name="collapse">Collapse</string>
     <string name="using_cached_data">Using cached data</string>
+    <string name="waters">Waters</string>
+    <string name="map">Map</string>
 </resources>

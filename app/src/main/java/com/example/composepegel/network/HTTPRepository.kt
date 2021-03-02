@@ -13,6 +13,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 interface HTTPRepository {
     suspend fun getWaters(): Result<List<WaterModel>>
 
+    suspend fun getAllStations(): Result<List<StationModel>>
+
     suspend fun getStationsForWaters(waterShortname: String): Result<List<StationModel>>
 
     suspend fun getDetailForStation(stationUuid: String): Result<StationModel>
@@ -29,6 +31,23 @@ class HTTPRepositoryImpl(client: Client) : HTTPRepository {
                 val response = api.getWaters()
                 if (response.isSuccess()) {
                     Result.Success(data = response.body()!!.filterNotNull().convertWaters())
+                } else {
+                    Result.Error(error = response.getError())
+                }
+            } catch (e: Exception) {
+                e.toResult()
+            }
+        }
+    }
+
+    @ExperimentalSerializationApi
+    override suspend fun getAllStations(): Result<List<StationModel>> {
+        return withContext(Dispatchers.Default) {
+            delay(500)
+            try {
+                val response = api.getStations()
+                if(response.isSuccess()){
+                    Result.Success(data = response.body()!!.filterNotNull().convertStations())
                 } else {
                     Result.Error(error = response.getError())
                 }

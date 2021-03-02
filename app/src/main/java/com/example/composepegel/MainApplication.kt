@@ -7,6 +7,7 @@ import com.example.composepegel.network.Client
 import com.example.composepegel.network.ClientImpl
 import com.example.composepegel.network.HTTPRepository
 import com.example.composepegel.network.HTTPRepositoryImpl
+import com.example.composepegel.ui.map.MapViewModel
 import com.example.composepegel.ui.station.StationViewModel
 import com.example.composepegel.ui.water.WaterViewModel
 import com.example.composepegel.ui.waters.WatersViewModel
@@ -61,5 +62,6 @@ class MainApplication : Application() {
             )
         }
         viewModel { WatersViewModel(get(), get(), get()) }
+        viewModel { MapViewModel(get(), get(), get()) }
     }
 }

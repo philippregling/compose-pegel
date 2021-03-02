@@ -18,6 +18,10 @@ interface PegelAPI {
     suspend fun getStationsForWater(@Query("waters") waterShortNames: String): Response<List<StationModelResponse?>?>
 
     @ExperimentalSerializationApi
+    @GET("stations.json")
+    suspend fun getStations(): Response<List<StationModelResponse?>?>
+
+    @ExperimentalSerializationApi
     @GET("stations/{uuid}.json")
     suspend fun getDetailsForStation(
         @Path("uuid") uuid: String,

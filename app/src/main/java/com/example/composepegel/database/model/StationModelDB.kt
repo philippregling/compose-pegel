@@ -17,7 +17,9 @@ open class StationModelDB(
     var shortname: String = "",
     var longname: String = "",
     var km: Double = 0.0,
-    var agency: String = ""
+    var agency: String = "",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0
 ) : RealmObject() {
     @LinkingObjects("stations")
     val water: RealmResults<WaterModelDB>? = null

@@ -27,6 +27,8 @@ fun StationModelResponse.convert(): StationModel {
         km,
         agency,
         water?.convert(),
+        latitude ?: 0.0,
+        longitude ?: 0.0,
         timeseries.convertTimeSeries()
     )
 }

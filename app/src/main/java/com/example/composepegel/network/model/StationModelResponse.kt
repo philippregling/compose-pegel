@@ -13,5 +13,7 @@ data class StationModelResponse(
     val km: Double = 0.0,
     val agency: String = "",
     val water: WaterModelResponse? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
     val timeseries: List<TimeSeriesModelResponse> = listOf()
 )

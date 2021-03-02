@@ -12,7 +12,11 @@ import io.realm.kotlin.where
 interface DatabaseClient {
     suspend fun queryWaters(): List<WaterModel>
 
+    suspend fun queryStations(): List<StationModel>
+
     suspend fun saveWaters(watersToSave: List<WaterModel>)
+
+    suspend fun saveStations(stationsToSave: List<StationModel>)
 
     suspend fun queryWaterForShortName(shortName: String): WaterModel
 
@@ -33,10 +37,26 @@ class DatabaseClientImpl : DatabaseClient {
         return emptyList()
     }
 
+    override suspend fun queryStations(): List<StationModel> {
+        Realm.getDefaultInstance()?.use {
+            val results = it.where<StationModelDB>().sort("shortname").findAll()
+            return results.convertStationsFromDB()
+        }
+        return emptyList()
+    }
+
     override suspend fun saveWaters(watersToSave: List<WaterModel>) {
         Realm.getDefaultInstance()?.use {
             it.executeTransactionAsync {
                 it.insertOrUpdate(watersToSave.convertWaters())
+            }
+        }
+    }
+
+    override suspend fun saveStations(stationsToSave: List<StationModel>) {
+        Realm.getDefaultInstance()?.use {
+            it.executeTransactionAsync {
+                it.insertOrUpdate(stationsToSave.convertStations())
             }
         }
     }
@@ -52,7 +72,8 @@ class DatabaseClientImpl : DatabaseClient {
     override suspend fun queryStationsForWater(waterShortName: String): List<StationModel> {
         Realm.getDefaultInstance()?.use {
             val list =
-                it.where<StationModelDB>().equalTo("water.shortname", waterShortName).sort("longname").findAll()
+                it.where<StationModelDB>().equalTo("water.shortname", waterShortName)
+                    .sort("longname").findAll()
             return list.convertStationsFromDB()
         }
         return emptyList()

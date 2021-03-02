@@ -41,6 +41,8 @@ fun StationModel.convert(): StationModelDB {
     dbModel.longname = this.longname
     dbModel.km = this.km
     dbModel.agency = this.agency
+    dbModel.latitude = this.latitude
+    dbModel.longitude = this.longitude
     return dbModel
 }
 
@@ -50,6 +52,6 @@ fun List<StationModelDB>.convertStationsFromDB(): List<StationModel> {
 
 fun StationModelDB.convert(): StationModel {
     return StationModel(
-        uuid, number, shortname, longname, km, agency, water?.firstOrNull()?.convert()
+        uuid, number, shortname, longname, km, agency, water?.firstOrNull()?.convert(), latitude, longitude
     )
 }
