@@ -22,6 +22,9 @@ class WatersViewModel(
     private val _state = MutableLiveData<WatersState>(WatersState.InProgress)
     val state: LiveData<WatersState> = _state
 
+    private val _query = MutableLiveData("")
+    val query: LiveData<String> = _query
+
     init {
         viewModelScope.launch {
             when (val result = httpRepository.getWaters()) {
@@ -40,6 +43,10 @@ class WatersViewModel(
 
             }
         }
+    }
+
+    fun onQueryChanged(newQuery: String) {
+        _query.value = newQuery
     }
 }
 

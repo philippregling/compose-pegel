@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import androidx.navigation.compose.navigate
 import com.example.composepegel.architecture.getViewModel
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.ui.common.DefaultError
@@ -46,34 +47,38 @@ fun Map(
     Box(modifier = Modifier.fillMaxSize()) {
         MapContent(
             state = viewState,
+            onMarkerClicked = {
+                navController.navigate("station/${it.uuid}?shortName=${it.shortname}")
+            }
         )
     }
 }
 
 @ExperimentalAnimationApi
 @Composable
-fun MapContent(state: MapState) {
+fun MapContent(state: MapState, onMarkerClicked: (StationModel) -> (Unit)) {
     when (state) {
         MapState.InProgress -> DefaultProgress()
-        is MapState.Stations -> CityMapView(stations = state.stations)
+        is MapState.Stations -> CityMapView(stations = state.stations, onMarkerClicked)
         is MapState.Error -> DefaultError(error = state.error ?: "")
     }
 }
 
 @Composable
-private fun CityMapView(stations: List<StationModel>) {
+private fun CityMapView(stations: List<StationModel>, onMarkerClicked: (StationModel) -> (Unit)) {
     // The MapView lifecycle is handled by this composable. As the MapView also needs to be updated
     // with input from Compose UI, those updates are encapsulated into the MapViewContainer
     // composable. In this way, when an update to the MapView happens, this composable won't
     // recompose and the MapView won't need to be recreated.
     val mapView = rememberMapViewWithLifecycle()
-    MapViewContainer(mapView, stations)
+    MapViewContainer(mapView, stations, onMarkerClicked)
 }
 
 @Composable
 private fun MapViewContainer(
     map: MapView,
-    stations: List<StationModel>
+    stations: List<StationModel>,
+    onMarkerClicked: (StationModel) -> (Unit)
 ) {
     var zoom by rememberSaveable { mutableStateOf(InitialZoom) }
     val coroutineScope = rememberCoroutineScope()
@@ -84,14 +89,24 @@ private fun MapViewContainer(
         coroutineScope.launch {
             val googleMap = mapView.awaitMap()
             googleMap.setZoom(mapZoom)
-            val bounds = stations.map { LatLng(it.latitude, it.longitude) }
             val latLngBounds = LatLngBounds.builder()
-            bounds.forEach {
+            stations.forEach {
                 if (it.latitude != 0.0 && it.longitude != 0.0) {
+                    val latLng = LatLng(it.latitude, it.longitude)
                     googleMap.addMarker {
-                        position(it)
+                        position(latLng)
+                        snippet(it.uuid)
                     }
-                    latLngBounds.include(it)
+                    latLngBounds.include(latLng)
+                }
+            }
+            googleMap.setOnMarkerClickListener {
+                val station = stations.find { itStation -> it.snippet == itStation.uuid }
+                if (station != null) {
+                    onMarkerClicked(station)
+                    true
+                } else {
+                    false
                 }
             }
             googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 0))
