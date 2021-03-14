@@ -1,7 +1,8 @@
 package com.example.composepegel.ui.station
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composepegel.model.StationModel
@@ -14,14 +15,14 @@ class StationViewModel(
     stationUuid: String
 ) : ViewModel() {
 
-    private val _state = MutableLiveData<StationState>(StationState.InProgress)
-    val state: LiveData<StationState> = _state
+    var state by mutableStateOf<StationState>(StationState.InProgress)
+    private set
 
     init {
         viewModelScope.launch {
-            when (val result = httpRepository.getDetailForStation(stationUuid)) {
-                is Result.Success -> _state.value = StationState.Station(result.data)
-                is Result.Error -> _state.value = StationState.Error(result.error)
+            state = when (val result = httpRepository.getDetailForStation(stationUuid)) {
+                is Result.Success -> StationState.Station(result.data)
+                is Result.Error -> StationState.Error(result.error)
             }
         }
     }

@@ -62,9 +62,8 @@ fun Station(
     stationUuid: String,
     viewModel: StationViewModel = getViewModel { parametersOf(stationUuid) }
 ) {
-    val viewState by viewModel.state.observeAsState(StationState.InProgress)
     Box(modifier = Modifier.fillMaxSize()) {
-        StationContent(state = viewState)
+        StationContent(state = viewModel.state)
     }
 }
 
