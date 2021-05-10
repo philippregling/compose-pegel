@@ -5,9 +5,14 @@ import com.example.composepegel.database.model.StationModelDB
 import com.example.composepegel.database.model.WaterModelDB
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.model.WaterModel
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.kotlin.where
+import javax.inject.Inject
 
 interface DatabaseClient {
     suspend fun queryWaters(): List<WaterModel>
@@ -27,7 +32,7 @@ interface DatabaseClient {
     suspend fun queryStationForUuid(uuid: String): StationModel
 }
 
-class DatabaseClientImpl : DatabaseClient {
+class DatabaseClientImpl @Inject constructor(): DatabaseClient {
 
     override suspend fun queryWaters(): List<WaterModel> {
         Realm.getDefaultInstance()?.use {
@@ -104,4 +109,14 @@ class DatabaseClientImpl : DatabaseClient {
         }
         return StationModel()
     }
+}
+
+@Module
+@InstallIn(ActivityRetainedComponent::class)
+abstract class DatabaseClientModule{
+
+    @Binds
+    abstract fun bindDatabaseClient(
+        databaseClientImpl: DatabaseClientImpl
+    ): DatabaseClient
 }

@@ -14,6 +14,7 @@ import com.example.composepegel.ui.waters.WatersViewModel
 import com.example.composepegel.util.NetworkStateClient
 import com.example.composepegel.util.NetworkStateClientImpl
 import com.jakewharton.threetenabp.AndroidThreeTen
+import dagger.hilt.android.HiltAndroidApp
 import io.realm.Realm
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -24,6 +25,7 @@ import timber.log.Timber
 import io.realm.RealmConfiguration
 
 
+@HiltAndroidApp
 class MainApplication : Application() {
 
     override fun onCreate() {
@@ -61,7 +63,7 @@ class MainApplication : Application() {
                 waterShortName
             )
         }
-        viewModel { WatersViewModel(get(), get(), get()) }
+        //viewModel { WatersViewModel(get(), get(), get()) }
         viewModel { MapViewModel(get(), get(), get()) }
     }
 }

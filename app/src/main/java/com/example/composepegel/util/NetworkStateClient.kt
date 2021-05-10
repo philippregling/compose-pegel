@@ -7,6 +7,11 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.util.Log
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Inject
 
 interface NetworkStateClient {
 
@@ -17,7 +22,7 @@ interface NetworkStateClient {
     var isOffline: Boolean
 }
 
-class NetworkStateClientImpl() : NetworkStateClient {
+class NetworkStateClientImpl @Inject constructor() : NetworkStateClient {
 
     private val callback = object : ConnectivityManager.NetworkCallback() {
 
@@ -42,4 +47,14 @@ class NetworkStateClientImpl() : NetworkStateClient {
     }
 
     override var isOffline: Boolean = false
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class NetworkStateClientModule {
+
+    @Binds
+    abstract fun bindNetworkStateClient(
+        networkStateClientImpl: NetworkStateClientImpl
+    ): NetworkStateClient
 }

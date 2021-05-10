@@ -19,7 +19,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -30,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,8 +44,6 @@ import com.example.composepegel.R
 import com.example.composepegel.model.WaterModel
 import com.example.composepegel.ui.common.DefaultError
 import com.example.composepegel.ui.common.DefaultProgress
-import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
 import java.util.*
 
 @ExperimentalFoundationApi
@@ -55,8 +51,9 @@ import java.util.*
 fun Waters(
     navController: NavController,
     scaffoldState: ScaffoldState,
-    viewModel: WatersViewModel = getViewModel()
+    viewModel: WatersViewModel
 ) {
+
     val viewState by viewModel.state.observeAsState(WatersState.InProgress)
     val query by viewModel.query.observeAsState("")
     Box(modifier = Modifier.fillMaxSize()) {

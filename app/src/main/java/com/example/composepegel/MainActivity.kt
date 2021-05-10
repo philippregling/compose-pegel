@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
@@ -39,12 +40,14 @@ import com.example.composepegel.ui.map.Map
 import com.example.composepegel.ui.station.Station
 import com.example.composepegel.ui.water.Water
 import com.example.composepegel.ui.waters.Waters
+import com.example.composepegel.ui.waters.WatersViewModel
 import com.example.composepegel.util.NetworkStateClient
 import com.example.composepegel.util.shareStationDetails
+import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 import org.koin.android.ext.android.inject
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val networkStateClient: NetworkStateClient by inject()
@@ -138,7 +141,8 @@ class MainActivity : AppCompatActivity() {
                                 composable("waters") {
                                     titleState.value = "Waters"
                                     menuState.value = MenuState()
-                                    Waters(navController, scaffoldState)
+                                    val viewModel = hiltNavGraphViewModel<WatersViewModel>()
+                                    Waters(navController, scaffoldState,viewModel)
                                 }
                                 composable("water/{shortName}") {
                                     val shortName = it.arguments?.getString("shortName") ?: ""

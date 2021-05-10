@@ -10,14 +10,21 @@ import com.example.composepegel.model.WaterModel
 import com.example.composepegel.network.HTTPRepository
 import com.example.composepegel.network.Result
 import com.example.composepegel.util.NetworkStateClient
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WatersViewModel(
+@HiltViewModel
+class WatersViewModel @Inject constructor(
     private val httpRepository: HTTPRepository,
     private val networkStateClient: NetworkStateClient,
     private val databaseClient: DatabaseClient
 ) : ViewModel() {
+
+
+
 
     private val _state = MutableLiveData<WatersState>(WatersState.InProgress)
     val state: LiveData<WatersState> = _state
