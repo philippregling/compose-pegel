@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -36,16 +37,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
 import com.example.composepegel.R
-import com.example.composepegel.architecture.getViewModel
 import com.example.composepegel.model.WaterModel
 import com.example.composepegel.ui.common.DefaultError
 import com.example.composepegel.ui.common.DefaultProgress
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 import java.util.*
 
 @ExperimentalFoundationApi
@@ -87,7 +89,7 @@ fun WatersContent(
     onQueryChanged: (query: String) -> Unit,
 ) {
     when (state) {
-        WatersState.InProgress -> DefaultProgress()
+        is WatersState.InProgress -> DefaultProgress()
         is WatersState.Waters -> {
             WatersList(
                 waters = state.waters,
@@ -96,12 +98,12 @@ fun WatersContent(
                 onQueryChanged
             )
             val errorText = stringResource(id = R.string.using_cached_data)
-            rememberCoroutineScope().launch {
+            LaunchedEffect(key1 = "Cached", block = {
                 if (state.isCachedData) scaffoldState.snackbarHostState.showSnackbar(
                     errorText,
                     "ok"
                 )
-            }
+            })
         }
         is WatersState.Error -> DefaultError(error = state.error ?: "")
     }
@@ -170,6 +172,17 @@ fun WatersList(
 @Preview
 @Composable
 fun PreviewWatersList() {
+    WatersList(
+        waters = listOf(WaterModel("1", "1"), WaterModel("2", "2")),
+        query = "",
+        onWaterClicked = {},
+        onQueryChanged = {})
+}
+
+@ExperimentalFoundationApi
+@Preview(device = Devices.NEXUS_10)
+@Composable
+fun PreviewWatersList2() {
     WatersList(
         waters = listOf(WaterModel("1", "1"), WaterModel("2", "2")),
         query = "",

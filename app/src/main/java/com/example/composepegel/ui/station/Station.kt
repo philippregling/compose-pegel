@@ -44,13 +44,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.bumptech.glide.request.RequestOptions
 import com.example.composepegel.R
-import com.example.composepegel.architecture.getViewModel
 import com.example.composepegel.model.StationModel
 import com.example.composepegel.ui.common.DefaultError
 import com.example.composepegel.ui.common.DefaultProgress
 import com.example.composepegel.util.generateMeasurementsUrl
 import dev.chrisbanes.accompanist.glide.GlideImage
 import jp.wasabeef.glide.transformations.gpu.InvertFilterTransformation
+import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 import java.util.*
 
